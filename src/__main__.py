@@ -1,5 +1,7 @@
 """Back Server."""
 
+import uvicorn
+
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.responses import StreamingResponse
@@ -57,3 +59,12 @@ async def get_media(album: str, media: str):
     return FileResponse(file_path)
 
 """
+
+
+if __name__ == "__main__":
+    uvicorn.run(
+        "__main__:app",
+        host="192.168.0.54",
+        port=8000,
+        log_level="info"
+    )
