@@ -1,0 +1,4 @@
+aiofiles==0.5.0
+autopep8==2.4.2
+fastapi==0.61.0
+pylint==2.6.0
