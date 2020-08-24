@@ -53,6 +53,7 @@ async def get_media(album: str, media: str):
 
 if __name__ == "__main__":
     app.run(
+        host=IP,
         port=PORT,
 
     )
