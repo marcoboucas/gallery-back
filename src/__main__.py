@@ -1,53 +1,43 @@
 """Back Server."""
 
-import uvicorn
 
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-from fastapi.responses import StreamingResponse
+from flask_cors import CORS
 from .gallery import Gallery
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+from flask import Flask
 
-gallery = Gallery('../photos')
+STATIC_FOLDER = '/mnt/Disque 1/Photos/'
+IP = "192.168.0.54"
+PORT = 8000
 
-origins = [
-    "http://192.168.0.53:3000",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+app = Flask(__name__, static_url_path=STATIC_FOLDER)
+CORS(app)
 
 
-@app.get("/")
+gallery = Gallery('/mnt/Disque 1/Photos/')
+
+
+@app.route("/")
 def read_root():
     return {
         "message": "Welcome to the Gallery App",
-        "baseUrl": "http://192.168.0.53:8000/photos"}
+        "baseUrl": f"http://{IP}:{PORT}/photos"}
 
 
-@app.get("/getAlbum/{album_name}")
+@app.route("/getAlbum/<album_name>")
 def read_album(album_name: str):
     return {
         "data": gallery.album(album_name)
     }
 
 
-@app.get("/getAlbums")
+@app.route("/getAlbums")
 def get_albums():
     return {
         "data": gallery.list_albums()
     }
 
 
-app.mount("/getMedia", StaticFiles(directory="../photos"), name="static")
 """
 @app.get("/getMedia/{album}/{media}")
 async def get_media(album: str, media: str):
@@ -62,9 +52,7 @@ async def get_media(album: str, media: str):
 
 
 if __name__ == "__main__":
-    uvicorn.run(
-        "__main__:app",
-        host="192.168.0.54",
-        port=8000,
-        log_level="info"
+    app.run(
+        port=PORT,
+
     )
